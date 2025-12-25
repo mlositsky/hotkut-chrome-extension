@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "AI Conversation Focus",
+  "version": "1.0",
+  "permissions": ["tabs", "scripting"],
+  "host_permissions": [
+    "*://chat.qwen.ai/*"
+  ],
+  "action": {
+    "default_title": "Switch to AI Chat"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
