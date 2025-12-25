@@ -1,15 +1,32 @@
 {
   "manifest_version": 3,
-  "name": "AI Conversation Focus",
+  "name": "Quick Switch To Tab",
   "version": "1.0",
-  "permissions": ["tabs", "scripting"],
-  "host_permissions": [
-    "*://chat.qwen.ai/*"
-  ],
+  "permissions": ["tabs", "scripting", "storage"],
+  "host_permissions": ["<all_urls>"],
   "action": {
-    "default_title": "Switch to AI Chat"
+    "default_title": "Options"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "options_page": "options.html",
+  "commands": {
+    "focus-site-1": {
+      "description": "Qwen"
+    },
+    "focus-site-2": {
+      "description": "Chat GPT"
+    },
+    "focus-site-3": {
+      "description": "Perplexity"
+    },
+    "focus-site-4": {
+      "description": "Custom site 1 "
+    },
+    "focus-site-5": {
+      "description": "Custom site 2"
+    }
   }
 }
