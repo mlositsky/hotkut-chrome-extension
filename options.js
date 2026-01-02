@@ -62,7 +62,7 @@ function restoreOptions() {
       div.innerHTML = `
         <div><label>URL Pattern:</label><input type="text" class="url" placeholder="example.com" value="${site.siteAddress || ""}"></div>
         <div><label>CSS Selector:</label><input type="text" class="selector" placeholder="#input-box" value="${site.selector || ""}"></div>
-        <div class="hotkey">Hotkey: ${hotkeyDisplay}</div>
+        <div class="hotkey"><a href='chrome://extensions/shortcuts'>Hotkey: ${hotkeyDisplay}</a></div>
       `;
       container.appendChild(div);
     }
