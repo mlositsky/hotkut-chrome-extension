@@ -62,13 +62,21 @@ function restoreOptions() {
       div.innerHTML = `
         <div><label>URL Pattern:</label><input type="text" class="url" placeholder="example.com" value="${site.siteAddress || ""}"></div>
         <div><label>CSS Selector:</label><input type="text" class="selector" placeholder="#input-box" value="${site.selector || ""}"></div>
-        <div class="hotkey"><a href='chrome://extensions/shortcuts'>Hotkey: ${hotkeyDisplay}</a></div>
+        <div class="hotkey"><button type="button" class="hotkey-btn">Hotkey: ${hotkeyDisplay}</button></div>
       `;
       container.appendChild(div);
     }
     });
   });
 }
+
+// Open Chrome shortcuts page safely
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".hotkey-btn");
+  if (!btn) return;
+
+  chrome.tabs.create({ url: "chrome://extensions/shortcuts" });
+});
 
 function saveOptions() {
   const sites = [];
