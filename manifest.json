@@ -39,10 +39,13 @@
       }
     },
     "focus-site-4": {
-      "description": "Custom site 1"
+      "description": "Claude",
+      "suggested_key": {
+        "default": "Alt+Shift+4"
+      }
     },
     "focus-site-5": {
-      "description": "Custom site 2"
+      "description": "Custom site 1"
     }
   }
 }

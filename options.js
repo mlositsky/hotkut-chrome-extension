@@ -1,6 +1,26 @@
 import { DEFAULT_SITES } from "./config.js";
 
 const MAX_SITES = 5;
+const COMMAND_NAMES = [
+  "focus-site-1",
+  "focus-site-2",
+  "focus-site-3",
+  "focus-site-4",
+  "focus-site-5"
+];
+
+function getHotkeyDisplay(shortcuts) {
+  if (!shortcuts || shortcuts.length === 0) {
+    return "Not set";
+  }
+  // Chrome typically returns only one shortcut per command
+  const shortcut = shortcuts[0];
+  if (!shortcut) return "Not set";
+
+  // Format the shortcut for display
+  return shortcut.replace(/\+(?=.)/g, '+ '); // Add space after + for better readability
+}
+
 
 function restoreOptions() {
   chrome.storage.sync.get("sites", (result) => {
@@ -13,16 +33,40 @@ function restoreOptions() {
     const sites = result.sites;
     const container = document.getElementById("sites");
     container.innerHTML = "";
+
+    // Get current command shortcuts
+    chrome.commands.getAll((commands) => {
+      const commandMap = {};
+      commands.forEach(cmd => {
+        if (cmd.name && cmd.shortcut) {
+          commandMap[cmd.name] = cmd.shortcut;
+        }
+      });
+
     for (let i = 0; i < MAX_SITES; i++) {
       const site = sites[i] || {};
+      const commandName = COMMAND_NAMES[i];
+      const currentHotkey = commandMap[commandName] || "";
+      const hotkeyDisplay = getHotkeyDisplay([currentHotkey]);
+
       const div = document.createElement("div");
       div.className = "site";
+
+      let siteName = "";
+      if (i < 3) {
+        siteName = DEFAULT_SITES[i].siteAddress.split('.')[0] || `Site ${i + 1}`;
+      } else {
+        siteName = `Custom site ${i - 2}`;
+      }
+
       div.innerHTML = `
         <div><label>URL Pattern:</label><input type="text" class="url" placeholder="example.com" value="${site.siteAddress || ""}"></div>
         <div><label>CSS Selector:</label><input type="text" class="selector" placeholder="#input-box" value="${site.selector || ""}"></div>
+        <div class="hotkey">Hotkey: ${hotkeyDisplay}</div>
       `;
       container.appendChild(div);
     }
+    });
   });
 }
 
