@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Quick Switch To Tab",
+  "name": "HotKut",
   "version": "1.0",
   "icons": {
      "48": "icon48.png"
@@ -10,8 +10,9 @@
   "action": {
     "default_title": "Options",
     "default_icon": {
-       "48": "icon48.png"
-     }
+      "48": "icon48.png"
+    },
+    "default_popup": "popup.html"
   },
   "background": {
     "service_worker": "background.js",
@@ -20,19 +21,31 @@
   "options_page": "options.html",
   "commands": {
     "focus-site-1": {
-      "description": "Qwen"
+      "description": "Qwen",
+      "suggested_key": {
+        "default": "Alt+Shift+1"
+      }
     },
     "focus-site-2": {
-      "description": "Chat GPT"
+      "description": "Chat GPT",
+      "suggested_key": {
+        "default": "Alt+Shift+2"
+      }
     },
     "focus-site-3": {
-      "description": "Perplexity"
+      "description": "Perplexity",
+      "suggested_key": {
+        "default": "Alt+Shift+3"
+      }
     },
     "focus-site-4": {
-      "description": "Custom site 1 "
+      "description": "Claude",
+      "suggested_key": {
+        "default": "Alt+Shift+4"
+      }
     },
     "focus-site-5": {
-      "description": "Custom site 2"
+      "description": "Custom site 1"
     }
   }
 }
