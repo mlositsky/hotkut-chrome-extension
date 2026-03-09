@@ -3,22 +3,88 @@
 <html>
   <head>
     <title>HotKut Sites Configuration</title>
+
     <style>
+      :root {
+        --panel-bg-light: rgba(255,255,255,0.85);
+        --panel-bg-dark: rgba(20,20,20,0.75);
+        --text-light: #111;
+        --text-dark: #f1f1f1;
+        --border-light: #ccc;
+        --border-dark: #444;
+        --accent: #1a73e8;
+      }
+
       body {
         font-family: sans-serif;
-        padding: 5px;
+        padding: 8px;
+        margin: 0;
+        position: relative;
+
+        /* background image */
+        background-image: url("background.png");
+        background-repeat: repeat;
+        background-position: top center;
+        background-size: 100% auto;
+        background-attachment: fixed;
+
+        color: var(--text-light);
       }
 
-      /* Status message with soft fade animation */
-      #status {
-        min-height: 22px;
-        margin-bottom: 10px;
-        opacity: 0;
-        transition: opacity 0.35s ease;
+      /* 50% tint overlay */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
       }
 
-      #status.visible {
-        opacity: 1;
+      @media (prefers-color-scheme: light) {
+        body::before {
+          background: rgba(255,255,255,0.5);
+        }
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          color: var(--text-dark);
+        }
+
+        body::before {
+          background: rgba(0,0,0,0.5);
+        }
+      }
+
+      /* UI above overlay */
+      body > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      h2 {
+        margin-top: 0;
+      }
+
+      .site {
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 6px;
+        backdrop-filter: blur(4px);
+      }
+
+      @media (prefers-color-scheme: light) {
+        .site {
+          background: var(--panel-bg-light);
+          border: 1px solid var(--border-light);
+        }
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .site {
+          background: var(--panel-bg-dark);
+          border: 1px solid var(--border-dark);
+        }
       }
 
       label {
@@ -27,24 +93,50 @@
       }
 
       input {
-        width: 250px;
+        width: 240px;
         margin-bottom: 10px;
+        border-radius: 4px;
+        padding: 4px 6px;
+        border: 1px solid #999;
+        background: rgba(255,255,255,0.9);
       }
 
-      .site {
-        margin-bottom: 15px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
+      @media (prefers-color-scheme: dark) {
+        input {
+          background: rgba(40,40,40,0.9);
+          color: #eee;
+          border: 1px solid #555;
+        }
       }
 
       button {
         margin-top: 10px;
+        padding: 6px 12px;
+        border-radius: 5px;
+        border: none;
+        background: var(--accent);
+        color: white;
+        cursor: pointer;
+      }
+
+      button:hover {
+        opacity: 0.9;
+      }
+
+      #status {
+        min-height: 22px;
+        margin-bottom: 10px;
+        opacity: 0;
+        transition: opacity 0.35s ease;
+        font-weight: 500;
+      }
+
+      #status.visible {
+        opacity: 1;
       }
 
       .hotkey {
         font-size: 0.9em;
-        color: #666;
         margin-bottom: 10px;
         font-style: italic;
       }
@@ -53,15 +145,17 @@
         background: none;
         border: none;
         padding: 0;
-        color: #1a73e8;
+        color: var(--accent);
         cursor: pointer;
         text-decoration: underline;
+        font-size: inherit;
       }
     </style>
   </head>
 
   <body>
     <h2>Configurable Sites</h2>
+
     <div id="status"></div>
 
     <div id="sites"></div>
