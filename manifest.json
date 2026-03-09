@@ -21,31 +21,31 @@
   "options_page": "options.html",
   "commands": {
     "focus-site-1": {
-      "description": "Qwen",
+      "description": "Site 1",
       "suggested_key": {
         "default": "Alt+Shift+1"
       }
     },
     "focus-site-2": {
-      "description": "Chat GPT",
+      "description": "Site 2",
       "suggested_key": {
         "default": "Alt+Shift+2"
       }
     },
     "focus-site-3": {
-      "description": "Perplexity",
+      "description": "Site 3",
       "suggested_key": {
         "default": "Alt+Shift+3"
       }
     },
     "focus-site-4": {
-      "description": "Claude",
+      "description": "Site 4",
       "suggested_key": {
         "default": "Alt+Shift+4"
       }
     },
     "focus-site-5": {
-      "description": "Custom site 1"
+      "description": "Site 5"
     }
   }
 }

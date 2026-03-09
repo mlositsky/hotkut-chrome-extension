@@ -9,22 +9,38 @@ const COMMAND_NAMES = [
   "focus-site-5"
 ];
 
+let statusTimer = null;
+
+function showStatus(message) {
+  const status = document.getElementById("status");
+
+  status.textContent = message;
+  status.classList.add("visible");
+
+  if (statusTimer) clearTimeout(statusTimer);
+
+  statusTimer = setTimeout(() => {
+    status.classList.remove("visible");
+
+    setTimeout(() => {
+      status.textContent = "";
+    }, 350);
+  }, 2000);
+}
+
 function getHotkeyDisplay(shortcuts) {
   if (!shortcuts || shortcuts.length === 0) {
     return "Not set";
   }
-  // Chrome typically returns only one shortcut per command
+
   const shortcut = shortcuts[0];
   if (!shortcut) return "Not set";
 
-  // Format the shortcut for display
-  return shortcut.replace(/\+(?=.)/g, '+ '); // Add space after + for better readability
+  return shortcut.replace(/\+(?=.)/g, '+ ');
 }
-
 
 function restoreOptions() {
   chrome.storage.sync.get("sites", (result) => {
-    // First run: populate defaults
     if (!Array.isArray(result.sites) || result.sites.length === 0) {
       chrome.storage.sync.set({ sites: DEFAULT_SITES }, restoreOptions);
       return;
@@ -34,7 +50,6 @@ function restoreOptions() {
     const container = document.getElementById("sites");
     container.innerHTML = "";
 
-    // Get current command shortcuts
     chrome.commands.getAll((commands) => {
       const commandMap = {};
       commands.forEach(cmd => {
@@ -43,34 +58,33 @@ function restoreOptions() {
         }
       });
 
-    for (let i = 0; i < MAX_SITES; i++) {
-      const site = sites[i] || {};
-      const commandName = COMMAND_NAMES[i];
-      const currentHotkey = commandMap[commandName] || "";
-      const hotkeyDisplay = getHotkeyDisplay([currentHotkey]);
+      for (let i = 0; i < MAX_SITES; i++) {
+        const site = sites[i] || {};
+        const commandName = COMMAND_NAMES[i];
+        const currentHotkey = commandMap[commandName] || "";
+        const hotkeyDisplay = getHotkeyDisplay([currentHotkey]);
 
-      const div = document.createElement("div");
-      div.className = "site";
+        const div = document.createElement("div");
+        div.className = "site";
 
-      let siteName = "";
-      if (i < 3) {
-        siteName = DEFAULT_SITES[i].siteAddress.split('.')[0] || `Site ${i + 1}`;
-      } else {
-        siteName = `Custom site ${i - 2}`;
+        let siteName = "";
+        if (i < 3) {
+          siteName = DEFAULT_SITES[i].siteAddress.split('.')[0] || `Site ${i + 1}`;
+        } else {
+          siteName = `Custom site ${i - 2}`;
+        }
+
+        div.innerHTML = `
+          <div><label>URL Pattern:</label><input type="text" class="url" placeholder="example.com" value="${site.siteAddress || ""}"></div>
+          <div><label>CSS Selector:</label><input type="text" class="selector" placeholder="#input-box" value="${site.selector || ""}"></div>
+          <div class="hotkey"><button type="button" class="hotkey-btn">Hotkey: ${hotkeyDisplay}</button></div>
+        `;
+        container.appendChild(div);
       }
-
-      div.innerHTML = `
-        <div><label>URL Pattern:</label><input type="text" class="url" placeholder="example.com" value="${site.siteAddress || ""}"></div>
-        <div><label>CSS Selector:</label><input type="text" class="selector" placeholder="#input-box" value="${site.selector || ""}"></div>
-        <div class="hotkey"><button type="button" class="hotkey-btn">Hotkey: ${hotkeyDisplay}</button></div>
-      `;
-      container.appendChild(div);
-    }
     });
   });
 }
 
-// Open Chrome shortcuts page safely
 document.addEventListener("click", (e) => {
   const btn = e.target.closest(".hotkey-btn");
   if (!btn) return;
@@ -80,28 +94,24 @@ document.addEventListener("click", (e) => {
 
 function saveOptions() {
   const sites = [];
-  document.querySelectorAll(".site").forEach((el, i) => {
+
+  document.querySelectorAll(".site").forEach((el) => {
     const url = el.querySelector(".url").value.trim();
     const selector = el.querySelector(".selector").value.trim();
+
     if (url && selector) {
       sites.push({ siteAddress: url, selector: selector });
     }
   });
 
   chrome.storage.sync.set({ sites }, () => {
-    const status = document.getElementById("status");
-    status.textContent = "Options saved.";
-    setTimeout(() => (status.textContent = ""), 2000);
+    showStatus("Options saved.");
   });
 }
 
 function resetOptions() {
   chrome.storage.sync.set({ sites: DEFAULT_SITES }, () => {
-    const status = document.getElementById("status");
-    status.textContent = "Options reset to defaults.";
-    setTimeout(() => (status.textContent = ""), 2000);
-
-    // Optionally, reload the form to reflect reset values
+    showStatus("Options reset to defaults.");
     restoreOptions();
   });
 }
@@ -109,3 +119,25 @@ function resetOptions() {
 document.addEventListener("DOMContentLoaded", restoreOptions);
 document.getElementById("save").addEventListener("click", saveOptions);
 document.getElementById("reset").addEventListener("click", resetOptions);
+
+/* -----------------------------
+   AUTOSAVE FEATURE
+----------------------------- */
+
+let autosaveTimer = null;
+
+function scheduleAutosave() {
+  if (autosaveTimer) {
+    clearTimeout(autosaveTimer);
+  }
+
+  autosaveTimer = setTimeout(() => {
+    saveOptions();
+  }, 400);
+}
+
+document.addEventListener("input", (e) => {
+  if (e.target.classList.contains("url") || e.target.classList.contains("selector")) {
+    scheduleAutosave();
+  }
+});
