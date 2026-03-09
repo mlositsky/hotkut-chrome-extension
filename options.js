@@ -67,17 +67,10 @@ function restoreOptions() {
         const div = document.createElement("div");
         div.className = "site";
 
-        let siteName = "";
-        if (i < 3) {
-          siteName = DEFAULT_SITES[i].siteAddress.split('.')[0] || `Site ${i + 1}`;
-        } else {
-          siteName = `Custom site ${i - 2}`;
-        }
-
         div.innerHTML = `
+          <div class="hotkey"><button type="button" class="hotkey-btn">Site ${i+1} Hotkey: ${hotkeyDisplay}</button></div>
           <div><label>URL Pattern:</label><input type="text" class="url" placeholder="example.com" value="${site.siteAddress || ""}"></div>
           <div><label>CSS Selector:</label><input type="text" class="selector" placeholder="#input-box" value="${site.selector || ""}"></div>
-          <div class="hotkey"><button type="button" class="hotkey-btn">Hotkey: ${hotkeyDisplay}</button></div>
         `;
         container.appendChild(div);
       }
