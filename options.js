@@ -68,10 +68,18 @@ function restoreOptions() {
         div.className = "site";
 
         div.innerHTML = `
-          <div class="hotkey"><button type="button" class="hotkey-btn">Site ${i+1} Hotkey: ${hotkeyDisplay}</button></div>
-          <div><label>URL Pattern:</label><input type="text" class="url" placeholder="example.com" value="${site.siteAddress || ""}"></div>
-          <div><label>CSS Selector:</label><input type="text" class="selector" placeholder="#input-box" value="${site.selector || ""}"></div>
-        `;
+  <div class="hotkey">
+    <button type="button" class="hotkey-btn">Site ${i+1} Hotkey: ${hotkeyDisplay}</button>
+  </div>
+
+  <div class="form-row">
+    <label>URL:</label>
+    <input type="text" class="url" placeholder="example.com" value="${site.siteAddress || ""}">
+
+    <label>#</label>
+    <input type="text" class="selector" placeholder="#input-box" value="${site.selector || ""}">
+  </div>
+`;
         container.appendChild(div);
       }
     });
